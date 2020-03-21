@@ -1,0 +1,28 @@
+version: '2'
+services:
+    pkgserver:
+        image: staticfloat/tagbot:app
+        restart: unless-stopped
+        expose:
+            - 4000
+        volumes:
+            - ./github_app.pem:/app/tagbot.pem:ro
+        environment:
+            GITHUB_PEM: "/app/tagbot.pem"
+            GITHUB_APP_ID: "${GITHUB_APP_ID}"
+            GITHUB_WEBHOOK_SECRET: "${GITHUB_WEBHOOK_SECRET}"
+            PORT: 4000
+        labels:
+            # Tell watchtower to auto-update this guy
+            com.centurylinklabs.watchtower.enable: true
+    
+    # Auto-reload docker containers when their images are updated
+    #watchtower:
+    #    image: containrrr/watchtower
+    #    volumes:
+            # Mount the docker socket
+    #        - /var/run/docker.sock:/var/run/docker.sock
+    #     command: --cleanup --label-enable
+
+volumes:
+    letsencrypt:
